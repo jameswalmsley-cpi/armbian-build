@@ -24,3 +24,11 @@ jobs:
       - name: Compile
         run: |
           ./compile.sh BOARD=rockpi-4cplus BRANCH=edge RELEASE=jammy BUILD_MINIMAL=yes KERNEL_CONFIGURE=no
+          mkdir downloads
+          cp output/images/*.img downloads
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: assets-for-download
+          path: downloads
