@@ -1,0 +1,49 @@
+name: Generate artifacts on PR
+#
+# If PR is labeled with "Build" and you are a member of "Release manager" team it will start (additional security feature)
+#
+
+on:
+  push:
+    tags:
+      - '*'
+
+concurrency:
+  group: pipeline-pr-${{github.event.pull_request.number}}
+  cancel-in-progress: true
+
+run-name: 'PR Build All from ${{ github.head_ref }} of sha ${{ github.sha }}'
+
+jobs:
+  build:
+    name: 'Build rockpi-4cplus'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Compile
+        run: |
+          ./compile.sh BOARD=rockpi-4cplus BRANCH=edge RELEASE=jammy BUILD_MINIMAL=yes KERNEL_CONFIGURE=no
+          mkdir downloads
+          cp output/images/*.img downloads
+
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          release_name: ${{ github.ref }}
+          tag_name: ${{ github.ref }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Upload Artifacts
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./outputs/images/*.img
+          asset_name: armbian-rockpi-4cplus.img
