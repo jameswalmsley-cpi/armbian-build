@@ -5,8 +5,8 @@ name: Generate artifacts on PR
 
 on:
   push:
-  pull_request:
-    types: [opened, reopened, synchronize, review_requested, labeled]
+    tags:
+      - '*'
 
 concurrency:
   group: pipeline-pr-${{github.event.pull_request.number}}
@@ -18,6 +18,8 @@ jobs:
   build:
     name: 'Build rockpi-4cplus'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v2
 
@@ -27,8 +29,8 @@ jobs:
           mkdir downloads
           cp output/images/*.img downloads
 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
         with:
-          name: assets-for-download
-          path: downloads
+          artifacts: "output/images/*.img"
