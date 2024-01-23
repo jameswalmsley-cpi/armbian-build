@@ -18,6 +18,8 @@ jobs:
   build:
     name: 'Build rockpi-4cplus'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v2
 
@@ -29,21 +31,6 @@ jobs:
 
 
       - name: Create Release
-        uses: actions/create-release@v1
-        id: create_release
+        uses: ncipollo/release-action@v1
         with:
-          draft: false
-          prerelease: false
-          release_name: ${{ github.ref }}
-          tag_name: ${{ github.ref }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Artifacts
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./outputs/images/*.img
-          asset_name: armbian-rockpi-4cplus.img
+          artifacts: "output/images/*.img"
