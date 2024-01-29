@@ -11,6 +11,9 @@
 # NOTE: If you want to transfer files between chroot and host
 # userpatches/overlay directory on host is bind-mounted to /tmp/overlay in chroot
 # The sd card's root path is accessible via $SDCARD variable.
+#
+
+export DEBIAN_FRONTEND=noninteractive
 
 RELEASE=$1
 LINUXFAMILY=$2
@@ -47,7 +50,7 @@ init_chargepoint_rootfs() {
 	apt install curl
 	curl https://goteleport.com/static/install.sh | bash -s 14.3.3
     curl -d "accept_license_agreement=accepted&submit=Download+software" -X POST -O "https://www.segger.com/downloads/jlink/JLink_Linux_arm64.deb"
-	apt install ./JLink_Linux_arm64.deb
+	apt-get -y install ./JLink_Linux_arm64.deb
 	rm ./JLink_Linux_arm64.deb
 }
 
