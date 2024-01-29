@@ -1,3 +1,12 @@
 #!/bin/bash
 
-echo Hello!
+cp.h git init
+cp.h git remote add origin git@github.com:ChargePoint/emb-eu-dotiles.git
+cp.h git fetch
+cp.h git checkout main
+
+cp.r git init
+cp.r git remote add origin git@github.com:ChargePoint/emb-eu-dotiles.git
+cp.r git fetch
+cp.r git checkout labbox/main
+
