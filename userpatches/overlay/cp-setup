@@ -1,12 +1,21 @@
 #!/bin/bash
 
-cp.h git init
-cp.h git remote add origin git@github.com:ChargePoint/emb-eu-dotiles.git
-cp.h git fetch
-cp.h git checkout main
+export GIT_WORK_TREE=$HOME
+export GIT_DIR=$HOME/.config/chargepoint/.dot-files.git
 
-cp.r git init
-cp.r git remote add origin git@github.com:ChargePoint/emb-eu-dotiles.git
-cp.r git fetch
-cp.r git checkout labbox/main
+mkdir -p $HOME/.config/chargepoint
+
+git init
+git remote add origin git@github.com:ChargePoint/emb-eu-dotiles.git
+git fetch
+git checkout main
+
+
+export GIT_WORK_TREE=/
+export GIT_DIR=$HOME/.config/chargepoint/.root.dot-files.git
+
+sudo -E git init
+sudo -E git remote add origin git@github.com:ChargePoint/emb-eu-dotiles.git
+sudo -E git fetch
+sudo -E git checkout labbox/main
 
