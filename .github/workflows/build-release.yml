@@ -25,10 +25,7 @@ jobs:
 
       - name: Compile
         run: |
-          ./compile.sh BOARD=rockpi-4cplus BRANCH=edge RELEASE=jammy BUILD_MINIMAL=yes KERNEL_CONFIGURE=no
-          mkdir downloads
-          cp output/images/*.img downloads
-
+          ./cp-build.sh
 
       - name: Create Release
         uses: ncipollo/release-action@v1

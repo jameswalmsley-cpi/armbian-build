@@ -23,7 +23,7 @@ jobs:
 
       - name: Compile
         run: |
-          ./compile.sh BOARD=rockpi-4cplus BRANCH=edge RELEASE=jammy BUILD_MINIMAL=yes KERNEL_CONFIGURE=no
+          ./cp-build.sh
           mkdir downloads
           cp output/images/*.img downloads
 
