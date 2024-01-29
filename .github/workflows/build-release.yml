@@ -30,4 +30,4 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "output/images/*.img"
+          artifacts: "output/images/*.img.xz"
