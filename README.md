@@ -1,7 +1,46 @@
 # ChargePoint LabBox
 
+build:
+
 ```
-./compile.sh BOARD=rockpi-4cplus BRANCH=edge RELEASE=jammy BUILD_MINIMAL=yes KERNEL_CONFIGURE=no HOST=test123
+./cp-build.sh
+```
+
+## Flash
+
+`output/images` contains a `.img.xz` file ready for flashing onto an sd-card or emmc device.
+You can use balena-etcher or simply dd:
+
+```
+xz -dc output/images/ChargePoint-Armbian_24.2.0-trunk_Rockpi-4cplus_jammy_current_6.6.14_minimal.img.xz  | sudo dd of=/dev/sdX status=progress bs=1M
+```
+
+## Setup
+
+First boot will login on the serial console or via hdmi. Ensure ethernet is connected (setup will get your locales quickly).
+
+Change the hostname:
+
+```
+echo "my-host-name.tp > /etc/hostname"
+nano /etc/hosts # Update the hostname lookup.
+```
+
+Get the ip addr:
+
+```
+ip addr
+```
+
+ssh into the device and complete setup (ssh-agent required):
+
+```
+ssh -A admin:1.2.3.4
+```
+
+```
+cp-setup
+sudo reboot
 ```
 
 <p align="center">
