@@ -1,21 +1,32 @@
 #!/bin/bash
 
+# Check if we have access to github through the
+ssh git@github.com
+
+if [ ! $? -eq 1 ]; then
+	echo "Required ssh access to github.. ensure you have ssh-agent forwarding enabled"
+	echo "and your ssh key is added. (ssh -A hostname) (ssh-add -k)"
+	exit 1
+fi
+
 export GIT_WORK_TREE=$HOME
 export GIT_DIR=$HOME/.config/chargepoint/.dot-files.git
 
 mkdir -p $HOME/.config/chargepoint
 
 git init
-git remote add origin git@github.com:ChargePoint/emb-eu-dotiles.git
+git remote add origin git@github.com:ChargePoint/emb-eu-dotfiles.git
+git remote set-url origin git@github.com:ChargePoint/emb-eu-dotfiles.git
 git fetch
-git checkout main
+git checkout main -f
 
 
 export GIT_WORK_TREE=/
 export GIT_DIR=$HOME/.config/chargepoint/.root.dot-files.git
 
 sudo -E git init
-sudo -E git remote add origin git@github.com:ChargePoint/emb-eu-dotiles.git
+sudo -E git remote add origin git@github.com:ChargePoint/emb-eu-dotfiles.git
+sudo -E git remote set-url origin git@github.com:ChargePoint/emb-eu-dotfiles.git
 sudo -E git fetch
-sudo -E git checkout labbox/main
+sudo -E git checkout labbox/main -f
 
