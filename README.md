@@ -35,13 +35,83 @@ ip addr
 ssh into the device and complete setup (ssh-agent required):
 
 ```
-ssh -A admin:1.2.3.4
+ssh -A admin@1.2.3.4
 ```
 
 ```
 cp-setup
 sudo reboot
 ```
+
+Initialise the labbox with the default config:
+
+```
+cp-labbox-init
+```
+
+### Setup Teleport
+
+Copy a teleport.yaml file from a working labbox you have access to. Modify the following fields:
+
+
+```/etc/teleport.yaml
+teleport:
+  nodename: #hostname#.tp
+  auth_token: #xxxx-secret-auth-token-copy-this-from-another-labbox#
+  ca_pin: #sha256:xxx-secret-ca-pin-copy-this-from-another-labbox#
+  auth_servers:
+  - chargepoint.teleport.sh:443
+  log:
+    output: stderr
+    severity: INFO
+auth_service:
+  enabled: no
+ssh_service:
+  enabled: yes
+  labels:
+    company: CP
+    infra: LAB
+    environment: QA
+    region: GB-RDG-Theale-2-LAB
+    system: #hostname#.tp
+  enhanced_recording:
+    enabled: false
+  # Dynamic labels AKA "commands":
+  commands:
+    - name: hostname
+      command: [hostname]
+      period: 1h0m0s
+    - name: arch
+      command: [uname, -m]
+      period: 1h0m0s
+      # this setting tells teleport to execute the command above
+      # once an hour. this value cannot be less than one minute.
+    - name: kernel
+      command: [uname, -r]
+      period: 1h0m0s
+    - name: agent-v
+      command: ["/bin/sh", "-c", "/usr/local/sbin/get_teleport_version.sh"]
+      period: 1h0m0s
+    - name: uptime
+      command: [uptime, -p]
+      period: 1m0s
+proxy_service:
+  enabled: no
+```
+
+```
+sudo systemctl enable teleport
+sudo systemctl start teleport
+```
+
+Note. If you mess up the teleport.yaml config file and start teleport.. it may be that teleport wont work once the file
+is corrected.. to fix this simply blast away any state that teleport has:
+
+```
+sudo rm -rf /var/lib/teleport
+```
+
+# Armbian README
 
 <p align="center">
   <a href="#build-framework">
